@@ -212,7 +212,7 @@
                 geosearch.addTo(map);
 
                 map.on('geosearch_showlocation', function(e) {
-                    if (main_marker) {
+                    if (main_marker && main_marker.feature.properties.editable) {
                         var latlng = {lat: e.Location.Y, lng: e.Location.X};
                         // update, otherwise screen is blank.
                         marker_cluster.removeLayer(main_marker);
@@ -262,7 +262,7 @@
 
         bind_popup: function(feature, marker) {
             var popup = feature.properties.popup;
-            if (feature.properties.editable) {
+            if (feature.properties.editable && !feature.properties.no_delete) {
                 // for editable markers add "delete marker" link to popup
                 popup = popup || '';
                 var $popup = $('<div>' + popup + '</div><br/>');
@@ -270,6 +270,7 @@
                 $link.on('click', function (e) {
                     e.preventDefault();
                     this.map.removeLayer(marker);
+                    marker = undefined;
                 }.bind(this));
                 marker.bindPopup(
                     $('<div/>').append($popup).append($link)[0]
