@@ -137,7 +137,7 @@
                             // for setting the search result marker.
                             main_marker = marker;
                         }
-                        marker.on('dragend', function (e) {
+                        marker.on('dragend move', function (e) {
                             // UPDATE INPUTS ON MARKER MOVE
                             var latlng = e.target.getLatLng();
                             var $latinput = $(feature.properties.latinput);
@@ -209,9 +209,11 @@
                 map.on('geosearch_showlocation', function(e) {
                     if (main_marker) {
                         var latlng = {lat: e.Location.Y, lng: e.Location.X};
+                        // update, otherwise screen is blank.
                         marker_cluster.removeLayer(main_marker);
                         main_marker.setLatLng(latlng).update();
                         marker_cluster.addLayer(main_marker);
+                        // fit to window
                         map.fitBounds([latlng]);
                     } else {
                         e.Marker.setIcon(this.red_marker);
@@ -234,6 +236,16 @@
                 });
                 map.addControl(addmarker);
             }
+
+            map.on('locationfound', function (e) {
+                if (main_marker && main_marker.feature.properties.editable) {
+                    // update, otherwise screen is blank.
+                    marker_cluster.removeLayer(main_marker);
+                    main_marker.setLatLng({lat: e.latlng.lat, lng: e.latlng.lng});
+                    marker_cluster.addLayer(main_marker);
+                }
+                map.fitBounds([e.latlng]);
+            });
 
             // Minimap
             if (options.minimap) {
