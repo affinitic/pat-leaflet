@@ -154,7 +154,9 @@
                             $(feature.properties.latinput).on('change', function (e) {
                                 var latlng = marker.getLatLng();
                                 marker.setLatLng({lat: $(e.target).val(), lng: latlng.lng});
-                                // TODO: fit bounds
+                                // fit bounds
+                                bounds = marker_cluster.getBounds();
+                                map.fitBounds(bounds);
                             });
                         }
                         if (feature.properties.lnginput) {
@@ -162,7 +164,9 @@
                             $(feature.properties.lnginput).on('change', function (e) {
                                 var latlng = marker.getLatLng();
                                 marker.setLatLng({lat: latlng.lat, lng: $(e.target).val()});
-                                // TODO: fit bounds
+                                // fit bounds
+                                bounds = marker_cluster.getBounds();
+                                map.fitBounds(bounds);
                             });
                         }
                         return marker;
