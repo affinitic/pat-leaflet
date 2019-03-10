@@ -60,9 +60,7 @@
     parser.addArgument('minimap', false);
 
     // map layers
-    parser.addArgument('default_map_layer', [
-        {'id': 'OpenStreetMap.Mapnik', 'options': {}}
-    ]);
+    parser.addArgument('default_map_layer', {'id': 'OpenStreetMap.Mapnik', 'options': {}});
     parser.addArgument('map_layers', [
         {'title': 'Map', 'id': 'OpenStreetMap.Mapnik', 'options': {}},
         {'title': 'Satellite', 'id': 'Esri.WorldImagery', 'options': {}},
@@ -113,6 +111,14 @@
             // Must be an array
             if ($.isArray(options.map_layers)) {
                 baseLayers = {};
+
+                // Convert map_layers elements from string to objects, if necesarry
+                options.map_layers = options.map_layers.map(function (it) {
+                    if (typeof(it) == 'string' ) {
+                        it = {id: it, options: {}};
+                    }
+                    return it;
+                });
                 for (var cnt = 0; cnt < options.map_layers.length; cnt++) {
                     // build layers object with tileLayer instances
                     var layer = options.map_layers[cnt];
@@ -124,7 +130,7 @@
             }
 
             if (typeof(options.default_map_layer) == 'string' ) {
-                options.default_map_layer = {'id': options.default_map_layer, 'options': {}}
+                options.default_map_layer = {id: options.default_map_layer, options: {}}
             }
             L.tileLayer.provider(options.default_map_layer.id, options.default_map_layer.options).addTo(map);
 
