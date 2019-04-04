@@ -2,6 +2,9 @@
 
 ## **1.3.0**
 
+* Add ``maxClusterRadius`` option for the marker cluster plugin. Default is 80 (pixels).
+  [thet]
+
 * Add ``color`` options to feature properties to explicitly set the marker color.
   ``color`` must be one of the predefined colors ``blue``, ``red``, ``darkred``, ``orange``, ``green``, ``darkgreen``, ``blue``, ``purple``, ``darkpurple``, ``cadetblue`` from https://github.com/lvoogdt/Leaflet.awesome-markers
   [thet]

@@ -47,6 +47,8 @@
     parser.addArgument('longitude', '0.0');
     parser.addArgument('zoom', '14');
 
+    parser.addArgument('maxClusterRadius', '80');
+
     // default controls
     parser.addArgument('fullscreencontrol', true);
     parser.addArgument('zoomcontrol', true);
@@ -142,7 +144,7 @@
             // ADD MARKERS
             geojson = this.$el.data().geojson;
             if (geojson) {
-                marker_cluster = new L.MarkerClusterGroup();
+                marker_cluster = new L.MarkerClusterGroup({'maxClusterRadius': options.maxClusterRadius});
                 marker_layer = L.geoJson(geojson, {
                     pointToLayer: function(feature, latlng) {
                         var marker_color = this.create_marker('green');
