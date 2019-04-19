@@ -2,6 +2,10 @@
 
 ## **1.4.0**
 
+* Add option to add some padding to ``fitBounds`` with a default of ``20``.
+  This brings search result on corners more in the map.
+  [thet]
+
 * Add ``extraClasses`` property to marker icons creation.
   This allows for extra classes like a marker uuid to work with.
   [thet]

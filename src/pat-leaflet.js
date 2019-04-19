@@ -49,6 +49,8 @@
 
     parser.addArgument('maxClusterRadius', '80');
 
+    parser.addArgument('boundsPadding', '20');
+
     // default controls
     parser.addArgument('fullscreencontrol', true);
     parser.addArgument('zoomcontrol', true);
@@ -79,6 +81,14 @@
 
         init: function initUndefined () {
             var options = this.options = parser.parse(this.$el);
+
+            var fitBoundsOptions = {
+                maxZoom: options.zoom,
+                padding: [
+                    parseInt(options.boundsPadding),
+                    parseInt(options.boundsPadding)
+                ]
+            }
 
             var baseLayers,
                 bounds,
@@ -185,7 +195,7 @@
                                 marker_cluster.addLayer(marker);
                                 // fit bounds
                                 bounds = marker_cluster.getBounds();
-                                map.fitBounds(bounds);
+                                map.fitBounds(bounds, fitBoundsOptions);
                             });
                         }
                         if (feature.properties.lnginput) {
@@ -197,7 +207,7 @@
                                 marker_cluster.addLayer(marker);
                                 // fit bounds
                                 bounds = marker_cluster.getBounds();
-                                map.fitBounds(bounds);
+                                map.fitBounds(bounds, fitBoundsOptions);
                             });
                         }
                         return marker;
@@ -209,7 +219,7 @@
 
                 // autozoom
                 bounds = marker_cluster.getBounds();
-                map.fitBounds(bounds, {maxZoom: options.zoom});
+                map.fitBounds(bounds, fitBoundsOptions);
             } else {
                 map.setView(
                     [options.latitude, options.longitude],
@@ -245,7 +255,7 @@
                         main_marker.setLatLng(latlng).update();
                         marker_cluster.addLayer(main_marker);
                         // fit to window
-                        map.fitBounds([latlng]);
+                        map.fitBounds([latlng], fitBoundsOptions);
                     } else {
                         e.Marker.setIcon(this.create_marker('red'));
                         this.bind_popup({properties: {editable: true, popup: 'New Marker'}}, e.Marker).bind(this);
@@ -275,7 +285,7 @@
                     main_marker.setLatLng({lat: e.latlng.lat, lng: e.latlng.lng});
                     marker_cluster.addLayer(main_marker);
                 }
-                map.fitBounds([e.latlng]);
+                map.fitBounds([e.latlng], fitBoundsOptions);
             });
 
             // Minimap
