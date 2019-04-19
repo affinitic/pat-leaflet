@@ -132,7 +132,7 @@
                 // Convert map_layers elements from string to objects, if necesarry
                 options.map_layers = options.map_layers.map(function (it) {
                     if (typeof(it) == 'string' ) {
-                        it = {id: it, options: {}};
+                        it = {id: it, title: it, options: {}};
                     }
                     return it;
                 });

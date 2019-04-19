@@ -2,6 +2,9 @@
 
 ## **1.4.0**
 
+* Fix a problem with ``map_layers`` option when it's a list of ids and no title was generated for the baseLayers object.
+  [thet]
+
 * Add some nicer, opinionated styles for the popup close button.
   [thet]
 
