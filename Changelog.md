@@ -2,6 +2,9 @@
 
 ## **1.4.0**
 
+* Add some nicer, opinionated styles for the popup close button.
+  [thet]
+
 * Add option to add some padding to ``fitBounds`` with a default of ``20``.
   This brings search result on corners more in the map.
   [thet]
