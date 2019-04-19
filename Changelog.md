@@ -1,5 +1,12 @@
 # Changelog
 
+## **1.4.0**
+
+* Add ``extraClasses`` property to marker icons creation.
+  This allows for extra classes like a marker uuid to work with.
+  [thet]
+
+
 ## **1.3.0**
 
 * Add ``maxClusterRadius`` option for the marker cluster plugin. Default is 80 (pixels).

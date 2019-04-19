@@ -147,20 +147,21 @@
                 marker_cluster = new L.MarkerClusterGroup({'maxClusterRadius': options.maxClusterRadius});
                 marker_layer = L.geoJson(geojson, {
                     pointToLayer: function(feature, latlng) {
-                        var marker_color = this.create_marker('green');
+                        var extraClasses = feature.properties.extraClasses || '';
+                        var markerColor = 'green';
                         if (feature.properties.color) {
-                          marker_color = this.create_marker(feature.properties.color);
+                            markerColor = feature.properties.color;
                         } else if (!main_marker || feature.properties.main) {
-                            marker_color = this.create_marker('red');
+                            markerColor = 'red';
                         }
+                        var marker_icon = this.create_marker(markerColor, extraClasses);
                         var marker = L.marker(latlng, {
-                            icon: marker_color,
+                            icon: marker_icon,
                             draggable: feature.properties.editable
                         });
                         if (!main_marker || feature.properties.main) {
                             // Set main marker. This is the one, which is used
                             // for setting the search result marker.
-                            marker.icon = this.create_marker('blue');
                             main_marker = marker;
                         }
                         marker.on('dragend move', function (e) {
@@ -305,12 +306,14 @@
             }
         },
 
-        create_marker: function (color) {
+        create_marker: function (color, extraClasses) {
           color = color || 'red';
+          extraClasses = extraClasses || '';
           return L.AwesomeMarkers.icon({
             markerColor: color,
             prefix: 'fa',
-            icon: 'circle'
+            icon: 'circle',
+            extraClasses: extraClasses
           });
         }
 
