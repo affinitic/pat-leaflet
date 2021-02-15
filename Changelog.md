@@ -16,6 +16,9 @@
   This allows for extra classes like a marker uuid to work with.
   [thet]
 
+* Add feature to load external ``geoJSON`` data via AJAX
+  [petschki]
+
 
 ## **1.3.0**
 
