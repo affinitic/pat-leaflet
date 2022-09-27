@@ -3,7 +3,7 @@ import Base from "@patternslib/patternslib/src/core/base";
 import Parser from "@patternslib/patternslib/src/core/parser";
 import logging from "@patternslib/patternslib/src/core/logging";
 
-var log = logging.getLogger("pat-leaflet");
+const log = logging.getLogger("pat-leaflet");
 log.debug("pattern loaded");
 
 export const parser = new Parser("leaflet");
@@ -58,15 +58,15 @@ export default Base.extend({
 
         const options = (this.options = parser.parse(this.el));
 
-        var fitBoundsOptions = (this.fitBoundsOptions = {
+        const fitBoundsOptions = (this.fitBoundsOptions = {
             maxZoom: options.zoom,
             padding: [parseInt(options.boundsPadding), parseInt(options.boundsPadding)],
         });
 
-        var main_marker = (this.main_marker = null);
+        const main_marker = (this.main_marker = null);
 
         // MAP INIT
-        var map = (this.map = this.L.map(this.el, {
+        const map = (this.map = this.L.map(this.el, {
             fullscreenControl: options.fullscreencontrol,
             zoomControl: options.zoomcontrol,
             // Leaflet.Sleep options
@@ -76,7 +76,7 @@ export default Base.extend({
             sleepOpacity: 1,
         }));
 
-        var marker_cluster = (this.marker_cluster = new LMarkerClusterGroup({
+        const marker_cluster = (this.marker_cluster = new LMarkerClusterGroup({
             maxClusterRadius: this.options.maxClusterRadius,
         }));
 
@@ -90,7 +90,7 @@ export default Base.extend({
         // Locatecontrol
         if (options.locatecontrol || options.autolocate) {
             await import("leaflet.locatecontrol");
-            var locatecontrol = this.L.control.locate().addTo(map);
+            const locatecontrol = this.L.control.locate().addTo(map);
             if (options.autolocate) {
                 locatecontrol.start();
             }
@@ -99,7 +99,7 @@ export default Base.extend({
         // Layers
         // Must be an array
         if (Array.isArray(options.map_layers)) {
-            var baseLayers = {};
+            const baseLayers = {};
 
             // Convert map_layers elements from string to objects, if necesarry
             options.map_layers = options.map_layers.map(function (it) {
@@ -108,9 +108,8 @@ export default Base.extend({
                 }
                 return it;
             });
-            for (var cnt = 0; cnt < options.map_layers.length; cnt++) {
+            for (const layer of options.map_layers) {
                 // build layers object with tileLayer instances
-                var layer = options.map_layers[cnt];
                 baseLayers[layer.title] = this.L.tileLayer.provider(
                     layer.id,
                     layer.options
@@ -131,7 +130,7 @@ export default Base.extend({
         map.setView([options.latitude, options.longitude], options.zoom);
 
         // ADD MARKERS
-        var geojson = this.$el.data().geojson;
+        const geojson = this.$el.data().geojson;
 
         if (typeof geojson === "string" && geojson.indexOf(".json") != -1) {
             // suppose this is a JSON url which ends with ".json" ... try to load it
@@ -161,14 +160,14 @@ export default Base.extend({
             }
 
             // GEOSEARCH
-            var geosearch = new GeoSearchControl({
+            const geosearch = new GeoSearchControl({
                 showMarker: main_marker === null,
                 provider: new SearchProvider(),
             });
             map.addControl(geosearch);
 
             map.on("geosearch/showlocation", (e) => {
-                var latlng = { lat: e.location.y, lng: e.location.x };
+                const latlng = { lat: e.location.y, lng: e.location.x };
                 if (main_marker && main_marker.feature.properties.editable) {
                     // update main_marker from geojson object
                     this.marker_cluster.removeLayer(main_marker);
@@ -190,10 +189,10 @@ export default Base.extend({
         if (options.addmarker) {
             await import("leaflet.simplemarkers/lib/Control.SimpleMarkers");
 
-            var add_marker_callback = function (marker) {
+            const add_marker_callback = function (marker) {
                 this.bind_popup({ properties: { editable: true } }, marker);
             };
-            var addmarker = new this.L.Control.SimpleMarkers({
+            const addmarker = new this.L.Control.SimpleMarkers({
                 delete_control: false,
                 allow_popup: false,
                 marker_icon: this.create_marker("red"),
@@ -223,15 +222,15 @@ export default Base.extend({
         let bounds;
         const marker_layer = this.L.geoJson(geojson, {
             pointToLayer: (feature, latlng) => {
-                var extraClasses = feature.properties.extraClasses || "";
-                var markerColor = "green";
+                const extraClasses = feature.properties.extraClasses || "";
+                let markerColor = "green";
                 if (feature.properties.color) {
                     markerColor = feature.properties.color;
                 } else if (!this.main_marker || feature.properties.main) {
                     markerColor = "red";
                 }
-                var marker_icon = this.create_marker(markerColor, extraClasses);
-                var marker = new this.L.Marker(latlng, {
+                const marker_icon = this.create_marker(markerColor, extraClasses);
+                const marker = new this.L.Marker(latlng, {
                     icon: marker_icon,
                     draggable: feature.properties.editable,
                 });
@@ -242,9 +241,9 @@ export default Base.extend({
                 }
                 marker.on("dragend move", function (e) {
                     // UPDATE INPUTS ON MARKER MOVE
-                    var latlng = e.target.getLatLng();
-                    var $latinput = $(feature.properties.latinput);
-                    var $lnginput = $(feature.properties.lnginput);
+                    const latlng = e.target.getLatLng();
+                    const $latinput = $(feature.properties.latinput);
+                    const $lnginput = $(feature.properties.lnginput);
                     if ($latinput.length) {
                         $latinput.val(latlng.lat);
                     }
@@ -255,7 +254,7 @@ export default Base.extend({
                 if (feature.properties.latinput) {
                     // UPDATE MARKER ON LATITUDE CHANGE
                     $(feature.properties.latinput).on("change", function (e) {
-                        var latlng = marker.getLatLng();
+                        const latlng = marker.getLatLng();
                         this.marker_cluster.removeLayer(marker);
                         marker
                             .setLatLng({ lat: $(e.target).val(), lng: latlng.lng })
@@ -269,7 +268,7 @@ export default Base.extend({
                 if (feature.properties.lnginput) {
                     // UPDATE MARKER ON LONGITUDE CHANGE
                     $(feature.properties.lnginput).on("change", function (e) {
-                        var latlng = marker.getLatLng();
+                        const latlng = marker.getLatLng();
                         this.marker_cluster.removeLayer(marker);
                         marker
                             .setLatLng({ lat: latlng.lat, lng: $(e.target).val() })
@@ -297,8 +296,8 @@ export default Base.extend({
         if (feature.properties.editable && !feature.properties.no_delete) {
             // for editable markers add "delete marker" link to popup
             popup = popup || "";
-            var $popup = $("<div>" + popup + "</div><br/>");
-            var $link = $("<a href='#' class='deleteMarker'>Delete Marker</a>");
+            const $popup = $("<div>" + popup + "</div><br/>");
+            const $link = $("<a href='#' class='deleteMarker'>Delete Marker</a>");
             $link.on("click", (e) => {
                 e.preventDefault();
                 this.map.removeLayer(marker);
