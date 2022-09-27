@@ -219,7 +219,7 @@ export default Base.extend({
         log.debug("pattern initialized");
     },
 
-    init_geojson: function (map, geojson) {
+    init_geojson(map, geojson) {
         let bounds;
         const marker_layer = this.L.geoJson(geojson, {
             pointToLayer: (feature, latlng) => {
@@ -292,7 +292,7 @@ export default Base.extend({
         map.fitBounds(bounds, this.fitBoundsOptions);
     },
 
-    bind_popup: function (feature, marker) {
+    bind_popup(feature, marker) {
         let popup = feature.properties.popup;
         if (feature.properties.editable && !feature.properties.no_delete) {
             // for editable markers add "delete marker" link to popup
@@ -310,7 +310,7 @@ export default Base.extend({
         }
     },
 
-    create_marker: function (color, extraClasses) {
+    create_marker(color, extraClasses) {
         color = color || "red";
         extraClasses = extraClasses || "";
         return this.L.AwesomeMarkers.icon({
