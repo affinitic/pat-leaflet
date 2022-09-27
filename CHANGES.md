@@ -1,5 +1,33 @@
 # Changelog
 
+
+
+## [2.0.0](https://github.com/patternslib/pat-leaflet/compare/1.4.0...2.0.0) (2022-09-27)
+
+
+### Breaking Changes
+
+
+* Upgrade Pattern to ES6 based Patternslib. ([1f073b6](https://github.com/patternslib/pat-leaflet/commit/1f073b687b67080586749732b2e07dba1ffce618))
+
+
+### Maintenance
+
+
+* Add infrastructure files. ([9780063](https://github.com/patternslib/pat-leaflet/commit/978006397336c6c8573a9514ed4f629eed464f1e))
+
+* Modernize - Reduce dependency on jQuery. ([81fd1a0](https://github.com/patternslib/pat-leaflet/commit/81fd1a03d691d74528d9b265d95a69bca87a9ce7))
+
+* Modernize - replace ``self`` with ``this``. ([40d2bcd](https://github.com/patternslib/pat-leaflet/commit/40d2bcdc922a47cade23a2095e94b01733533c44))
+
+* Modernize - replace $.ajax with fetch. ([4f89206](https://github.com/patternslib/pat-leaflet/commit/4f8920650f4406496a9b9c89aaff7d7475f6292b))
+
+* Modernize - Use const/let instead of var. ([6471b64](https://github.com/patternslib/pat-leaflet/commit/6471b64d18b5c852363af57451a9a9cc9369af9a))
+
+* Modernize - Use dynamic imports and import only what is needed. ([d26ded3](https://github.com/patternslib/pat-leaflet/commit/d26ded3ad8cd84797c93eae55f828c04779a5014))
+
+* Modernize - Use Patternslib code style functions. ([a4fae68](https://github.com/patternslib/pat-leaflet/commit/a4fae68e379b37687293ee59294a1a9c281236f6))
+
 ## **1.4.0**
 
 * Fix a problem with ``map_layers`` option when it's a list of ids and no title was generated for the baseLayers object.
