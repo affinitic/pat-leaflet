@@ -48,7 +48,7 @@ export default Base.extend({
     async init() {
         import("./leaflet.scss");
 
-        const L = (await import("leaflet")).default;
+        this.L = (await import("leaflet")).default;
         const LMarkerClusterGroup = (await import("leaflet.markercluster")).MarkerClusterGroup; // prettier-ignore
         const {
             GeoSearchControl,
@@ -66,22 +66,17 @@ export default Base.extend({
         await import("leaflet.locatecontrol");
         await import("leaflet.simplemarkers/lib/Control.SimpleMarkers");
 
-        var self = this;
+        const options = (this.options = parser.parse(this.el));
 
-        // BBB: remove jquery dependency in the future
-        self.$el = $(self.el);
-
-        var options = (self.options = parser.parse(self.el));
-
-        var fitBoundsOptions = (self.fitBoundsOptions = {
+        var fitBoundsOptions = (this.fitBoundsOptions = {
             maxZoom: options.zoom,
             padding: [parseInt(options.boundsPadding), parseInt(options.boundsPadding)],
         });
 
-        var main_marker = (self.main_marker = null);
+        var main_marker = (this.main_marker = null);
 
         // MAP INIT
-        var map = (self.map = L.map(self.el, {
+        var map = (this.map = this.L.map(this.el, {
             fullscreenControl: options.fullscreencontrol,
             zoomControl: options.zoomcontrol,
             // Leaflet.Sleep options
@@ -91,20 +86,20 @@ export default Base.extend({
             sleepOpacity: 1,
         }));
 
-        var marker_cluster = (self.marker_cluster = new LMarkerClusterGroup({
-            maxClusterRadius: self.options.maxClusterRadius,
+        var marker_cluster = (this.marker_cluster = new LMarkerClusterGroup({
+            maxClusterRadius: this.options.maxClusterRadius,
         }));
 
         // hand over some map events to the element
-        map.on("moveend zoomend", function (e) {
-            self.$el.trigger("leaflet." + e.type, { original_event: e });
+        map.on("moveend zoomend", (e) => {
+            this.$el.trigger(`leaflet.${e.type}`, { original_event: e });
         });
 
-        L.Icon.Default.imagePath = options.image_path;
+        this.L.Icon.Default.imagePath = options.image_path;
 
         // Locatecontrol
         if (options.locatecontrol || options.autolocate) {
-            var locatecontrol = L.control.locate().addTo(map);
+            var locatecontrol = this.L.control.locate().addTo(map);
             if (options.autolocate) {
                 locatecontrol.start();
             }
@@ -125,17 +120,20 @@ export default Base.extend({
             for (var cnt = 0; cnt < options.map_layers.length; cnt++) {
                 // build layers object with tileLayer instances
                 var layer = options.map_layers[cnt];
-                baseLayers[layer.title] = L.tileLayer.provider(layer.id, layer.options);
+                baseLayers[layer.title] = this.L.tileLayer.provider(
+                    layer.id,
+                    layer.options
+                );
             }
             if (options.map_layers.length > 1) {
-                L.control.layers(baseLayers).addTo(map);
+                this.L.control.layers(baseLayers).addTo(map);
             }
         }
 
         if (typeof options.default_map_layer == "string") {
             options.default_map_layer = { id: options.default_map_layer, options: {} };
         }
-        L.tileLayer
+        this.L.tileLayer
             .provider(options.default_map_layer.id, options.default_map_layer.options)
             .addTo(map);
 
@@ -149,12 +147,12 @@ export default Base.extend({
             $.ajax({
                 url: geojson,
                 success: function (data) {
-                    self.init_geojson(map, data);
+                    this.init_geojson(map, data);
                 },
             });
         } else if (geojson) {
             // inject inline geoJSON data object
-            self.init_geojson(map, geojson);
+            this.init_geojson(map, geojson);
         }
 
         if (options.geosearch) {
@@ -176,16 +174,16 @@ export default Base.extend({
             });
             map.addControl(geosearch);
 
-            map.on("geosearch/showlocation", function (e) {
+            map.on("geosearch/showlocation", (e) => {
                 var latlng = { lat: e.location.y, lng: e.location.x };
                 if (main_marker && main_marker.feature.properties.editable) {
                     // update main_marker from geojson object
-                    self.marker_cluster.removeLayer(main_marker);
+                    this.marker_cluster.removeLayer(main_marker);
                     main_marker.setLatLng(latlng).update();
-                    self.marker_cluster.addLayer(main_marker);
+                    this.marker_cluster.addLayer(main_marker);
                 } else {
-                    e.marker.setIcon(self.create_marker("red"));
-                    self.bind_popup(
+                    e.marker.setIcon(this.create_marker("red"));
+                    this.bind_popup(
                         { properties: { editable: true, popup: e.location.label } },
                         e.marker
                     );
@@ -198,22 +196,22 @@ export default Base.extend({
 
         if (options.addmarker) {
             var add_marker_callback = function (marker) {
-                self.bind_popup({ properties: { editable: true } }, marker);
+                this.bind_popup({ properties: { editable: true } }, marker);
             };
-            var addmarker = new L.Control.SimpleMarkers({
+            var addmarker = new this.L.Control.SimpleMarkers({
                 delete_control: false,
                 allow_popup: false,
-                marker_icon: self.create_marker("red"),
+                marker_icon: this.create_marker("red"),
                 marker_draggable: true,
-                add_marker_callback: add_marker_callback,
+                add_marker_callback: add_marker_callback.bind(this),
             });
             map.addControl(addmarker);
         }
 
         // Minimap
         if (options.minimap) {
-            var minimap = new L.Control.MiniMap(
-                L.tileLayer.provider(
+            var minimap = new this.L.Control.MiniMap(
+                this.L.tileLayer.provider(
                     options.default_map_layer.id,
                     options.default_map_layer.options
                 ),
@@ -226,27 +224,25 @@ export default Base.extend({
     },
 
     init_geojson: function (map, geojson) {
-        var self = this,
-            bounds,
-            marker_layer;
-        marker_layer = L.geoJson(geojson, {
-            pointToLayer: function (feature, latlng) {
+        let bounds;
+        const marker_layer = this.L.geoJson(geojson, {
+            pointToLayer: (feature, latlng) => {
                 var extraClasses = feature.properties.extraClasses || "";
                 var markerColor = "green";
                 if (feature.properties.color) {
                     markerColor = feature.properties.color;
-                } else if (!self.main_marker || feature.properties.main) {
+                } else if (!this.main_marker || feature.properties.main) {
                     markerColor = "red";
                 }
-                var marker_icon = self.create_marker(markerColor, extraClasses);
-                var marker = new L.Marker(latlng, {
+                var marker_icon = this.create_marker(markerColor, extraClasses);
+                var marker = new this.L.Marker(latlng, {
                     icon: marker_icon,
                     draggable: feature.properties.editable,
                 });
-                if (!self.main_marker || feature.properties.main) {
+                if (!this.main_marker || feature.properties.main) {
                     // Set main marker. This is the one, which is used
                     // for setting the search result marker.
-                    self.main_marker = marker;
+                    this.main_marker = marker;
                 }
                 marker.on("dragend move", function (e) {
                     // UPDATE INPUTS ON MARKER MOVE
@@ -264,53 +260,52 @@ export default Base.extend({
                     // UPDATE MARKER ON LATITUDE CHANGE
                     $(feature.properties.latinput).on("change", function (e) {
                         var latlng = marker.getLatLng();
-                        self.marker_cluster.removeLayer(marker);
+                        this.marker_cluster.removeLayer(marker);
                         marker
                             .setLatLng({ lat: $(e.target).val(), lng: latlng.lng })
                             .update();
-                        self.marker_cluster.addLayer(marker);
+                        this.marker_cluster.addLayer(marker);
                         // fit bounds
-                        bounds = self.marker_cluster.getBounds();
-                        map.fitBounds(bounds, self.fitBoundsOptions);
+                        bounds = this.marker_cluster.getBounds();
+                        map.fitBounds(bounds, this.fitBoundsOptions);
                     });
                 }
                 if (feature.properties.lnginput) {
                     // UPDATE MARKER ON LONGITUDE CHANGE
                     $(feature.properties.lnginput).on("change", function (e) {
                         var latlng = marker.getLatLng();
-                        self.marker_cluster.removeLayer(marker);
+                        this.marker_cluster.removeLayer(marker);
                         marker
                             .setLatLng({ lat: latlng.lat, lng: $(e.target).val() })
                             .update();
-                        self.marker_cluster.addLayer(marker);
+                        this.marker_cluster.addLayer(marker);
                         // fit bounds
-                        bounds = self.marker_cluster.getBounds();
-                        map.fitBounds(bounds, self.fitBoundsOptions);
+                        bounds = this.marker_cluster.getBounds();
+                        map.fitBounds(bounds, this.fitBoundsOptions);
                     });
                 }
                 return marker;
             },
-            onEachFeature: self.bind_popup,
+            onEachFeature: this.bind_popup.bind(this),
         });
-        self.marker_cluster.addLayer(marker_layer);
-        map.addLayer(self.marker_cluster);
+        this.marker_cluster.addLayer(marker_layer);
+        map.addLayer(this.marker_cluster);
 
         // autozoom
-        bounds = self.marker_cluster.getBounds();
-        map.fitBounds(bounds, self.fitBoundsOptions);
+        bounds = this.marker_cluster.getBounds();
+        map.fitBounds(bounds, this.fitBoundsOptions);
     },
 
     bind_popup: function (feature, marker) {
-        var self = this,
-            popup = feature.properties.popup;
+        let popup = feature.properties.popup;
         if (feature.properties.editable && !feature.properties.no_delete) {
             // for editable markers add "delete marker" link to popup
             popup = popup || "";
             var $popup = $("<div>" + popup + "</div><br/>");
             var $link = $("<a href='#' class='deleteMarker'>Delete Marker</a>");
-            $link.on("click", function (e) {
+            $link.on("click", (e) => {
                 e.preventDefault();
-                self.map.removeLayer(marker);
+                this.map.removeLayer(marker);
                 marker = undefined;
             });
             marker.bindPopup($("<div/>").append($popup).append($link)[0]);
@@ -322,7 +317,7 @@ export default Base.extend({
     create_marker: function (color, extraClasses) {
         color = color || "red";
         extraClasses = extraClasses || "";
-        return L.AwesomeMarkers.icon({
+        return this.L.AwesomeMarkers.icon({
             markerColor: color,
             prefix: "fa",
             icon: "circle",
