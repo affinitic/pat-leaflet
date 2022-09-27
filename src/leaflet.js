@@ -50,21 +50,11 @@ export default Base.extend({
 
         this.L = (await import("leaflet")).default;
         const LMarkerClusterGroup = (await import("leaflet.markercluster")).MarkerClusterGroup; // prettier-ignore
-        const {
-            GeoSearchControl,
-            EsriProvider,
-            GoogleProvider,
-            BingProvider,
-            OpenStreetMapProvider,
-        } = await import("leaflet-geosearch");
 
-        await import("leaflet-minimap");
         await import("leaflet-providers");
         await import("leaflet-sleep");
         await import("leaflet.awesome-markers");
         await import("leaflet.fullscreen");
-        await import("leaflet.locatecontrol");
-        await import("leaflet.simplemarkers/lib/Control.SimpleMarkers");
 
         const options = (this.options = parser.parse(this.el));
 
@@ -99,6 +89,7 @@ export default Base.extend({
 
         // Locatecontrol
         if (options.locatecontrol || options.autolocate) {
+            await import("leaflet.locatecontrol");
             var locatecontrol = this.L.control.locate().addTo(map);
             if (options.autolocate) {
                 locatecontrol.start();
@@ -156,21 +147,23 @@ export default Base.extend({
         }
 
         if (options.geosearch) {
-            var provider;
+            const { GeoSearchControl } = await import("leaflet-geosearch");
+
+            let SearchProvider;
             if (options.geosearch_provider === "esri") {
-                provider = new EsriProvider();
+                SearchProvider = (await import("leaflet-geosearch")).EsriProvider;
             } else if (options.geosearch_provider === "google") {
-                provider = new GoogleProvider();
+                SearchProvider = (await import("leaflet-geosearch")).GoogleProvider;
             } else if (options.geosearch_provider === "bing") {
-                provider = new BingProvider();
+                SearchProvider = (await import("leaflet-geosearch")).BingProvider;
             } else {
-                provider = new OpenStreetMapProvider();
+                SearchProvider = (await import("leaflet-geosearch")).OpenStreetMapProvider; // prettier-ignore
             }
 
             // GEOSEARCH
             var geosearch = new GeoSearchControl({
                 showMarker: main_marker === null,
-                provider: provider,
+                provider: new SearchProvider(),
             });
             map.addControl(geosearch);
 
@@ -195,6 +188,8 @@ export default Base.extend({
         }
 
         if (options.addmarker) {
+            await import("leaflet.simplemarkers/lib/Control.SimpleMarkers");
+
             var add_marker_callback = function (marker) {
                 this.bind_popup({ properties: { editable: true } }, marker);
             };
@@ -210,7 +205,8 @@ export default Base.extend({
 
         // Minimap
         if (options.minimap) {
-            var minimap = new this.L.Control.MiniMap(
+            await import("leaflet-minimap");
+            const minimap = new this.L.Control.MiniMap(
                 this.L.tileLayer.provider(
                     options.default_map_layer.id,
                     options.default_map_layer.options
