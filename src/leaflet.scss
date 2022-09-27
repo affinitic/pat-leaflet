@@ -1,0 +1,40 @@
+@import "/node_modules/fontawesome-free/css/all.min.css";
+@import "/node_modules/leaflet/dist/leaflet.css";
+
+@import "/node_modules/leaflet-geosearch/dist/geosearch.css";
+@import "/node_modules/leaflet-minimap/dist/Control.MiniMap.min.css";
+@import "/node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.css";
+@import "/node_modules/leaflet.fullscreen/Control.FullScreen.css";
+@import "/node_modules/leaflet.locatecontrol/dist/L.Control.Locate.css";
+@import "/node_modules/leaflet.markercluster/dist/MarkerCluster.css";
+@import "/node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css";
+@import "/node_modules/leaflet.simplemarkers/lib/Control.SimpleMarkers.css";
+
+
+.pat-leaflet {
+    height: 400px;
+}
+
+.leaflet-popup {
+    padding: 1rem 1rem 0 1rem;
+}
+.leaflet-popup a.leaflet-popup-close-button.leaflet-popup-close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0;
+    font-size: 1rem;
+    color: black;
+    text-shadow:
+        -0.2rem   0      0 white,
+         0.2rem   0      0 white,
+         0       -0.2rem 0 white,
+         0        0.2rem 0 white,
+        -0.2rem   0.2rem 0 white,
+         0.2rem  -0.2rem 0 white,
+        -0.2rem  -0.2rem 0 white,
+         0.2rem   0.2rem 0 white;
+}
+.leaflet-popup a.leaflet-popup-close-button.leaflet-popup-close-button:hover {
+    color: red;
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>leaflet demo</title>
+    <script src="/bundle.min.js"></script>
+  </head>
+  <body>
+
+    <h2>pat-leaflet demo - minimal</h2>
+    <div id="map1" style="height:400px" class="pat-leaflet" data-pat-leaflet='
+    {
+      "fullscreencontrol": false,
+      "locatecontrol": false,
+      "zoomcontrol": true,
+      "geosearch": true,
+      "latitude": 47.33325135,
+      "longitude": 9.645877746692685
+    }'></div>
+
+    <h2>pat-leaflet demo - full</h2>
+    <div id="map2" style="height:400px" class="pat-leaflet"
+        data-pat-leaflet='{
+"fullscreencontrol": true,
+"locatecontrol": true,
+"zoomcontrol": true,
+"minimap": true,
+"geosearch": true,
+"geosearch_provider": "nominatim",
+"addmarker": true,
+"maxClusterRadius": 80
+}'
+        data-geojson='{
+"type": "FeatureCollection",
+"features": [
+    {
+        "type": "Feature",
+        "id": 1,
+        "properties": {
+            "popup": "reverse - copenhagen international poetry festival (dnk), copenhagen, denmark",
+            "editable": true,
+            "latinput": "#latinput",
+            "lnginput": "#lnginput"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                12.55568,
+                55.69078
+            ]
+        }
+    },
+    {
+        "type": "Feature",
+        "id": 2,
+        "properties": {
+          "popup": "hoergeREDE (aut), graz, austria",
+          "color": "purple",
+          "extraClasses": "pat-leaflet-marker--hoergerede-graz"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                15.4382918,
+                47.0708101
+            ]
+        }
+    },
+    {
+        "type": "Feature",
+        "id": 3,
+        "properties": {
+          "popup": "sarajevo days of poetry (bih), sarajevo, bosnia"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                18.3886134,
+                43.8514981
+            ]
+        }
+    }
+]}'></div>
+  <input type="text" name="latitude" value="55.69078" id="latinput"/>
+  <input type="text" name="longitude" value="12.55568" id="lnginput"/>
+
+  </body>
+</html>
