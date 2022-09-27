@@ -1,6 +1,7 @@
 import $ from "jquery";
 import Base from "@patternslib/patternslib/src/core/base";
 import Parser from "@patternslib/patternslib/src/core/parser";
+import events from "@patternslib/patternslib/src/core/events";
 import logging from "@patternslib/patternslib/src/core/logging";
 
 const log = logging.getLogger("pat-leaflet");
@@ -239,45 +240,57 @@ export default Base.extend({
                     // for setting the search result marker.
                     this.main_marker = marker;
                 }
-                marker.on("dragend move", function (e) {
+
+                const input_lat = document.querySelector(feature.properties.latinput);
+                const input_lng = document.querySelector(feature.properties.lnginput);
+
+                marker.on("dragend move", (e) => {
                     // UPDATE INPUTS ON MARKER MOVE
                     const latlng = e.target.getLatLng();
-                    const $latinput = $(feature.properties.latinput);
-                    const $lnginput = $(feature.properties.lnginput);
-                    if ($latinput.length) {
-                        $latinput.val(latlng.lat);
+                    if (input_lat) {
+                        input_lat.value = latlng.lat;
                     }
-                    if ($lnginput.length) {
-                        $lnginput.val(latlng.lng);
+                    if (input_lng) {
+                        input_lng.value = latlng.lng;
                     }
                 });
-                if (feature.properties.latinput) {
+                if (input_lat) {
                     // UPDATE MARKER ON LATITUDE CHANGE
-                    $(feature.properties.latinput).on("change", function (e) {
-                        const latlng = marker.getLatLng();
-                        this.marker_cluster.removeLayer(marker);
-                        marker
-                            .setLatLng({ lat: $(e.target).val(), lng: latlng.lng })
-                            .update();
-                        this.marker_cluster.addLayer(marker);
-                        // fit bounds
-                        bounds = this.marker_cluster.getBounds();
-                        map.fitBounds(bounds, this.fitBoundsOptions);
-                    });
+                    events.add_event_listener(
+                        input_lat,
+                        "input",
+                        "pat-leaflet--input_lat",
+                        (e) => {
+                            const latlng = marker.getLatLng();
+                            this.marker_cluster.removeLayer(marker);
+                            marker
+                                .setLatLng({ lat: e.target.value, lng: latlng.lng })
+                                .update();
+                            this.marker_cluster.addLayer(marker);
+                            // fit bounds
+                            bounds = this.marker_cluster.getBounds();
+                            map.fitBounds(bounds, this.fitBoundsOptions);
+                        }
+                    );
                 }
-                if (feature.properties.lnginput) {
+                if (input_lng) {
                     // UPDATE MARKER ON LONGITUDE CHANGE
-                    $(feature.properties.lnginput).on("change", function (e) {
-                        const latlng = marker.getLatLng();
-                        this.marker_cluster.removeLayer(marker);
-                        marker
-                            .setLatLng({ lat: latlng.lat, lng: $(e.target).val() })
-                            .update();
-                        this.marker_cluster.addLayer(marker);
-                        // fit bounds
-                        bounds = this.marker_cluster.getBounds();
-                        map.fitBounds(bounds, this.fitBoundsOptions);
-                    });
+                    events.add_event_listener(
+                        input_lng,
+                        "input",
+                        "pat-leaflet--input_lng",
+                        (e) => {
+                            const latlng = marker.getLatLng();
+                            this.marker_cluster.removeLayer(marker);
+                            marker
+                                .setLatLng({ lat: latlng.lat, lng: e.target.value })
+                                .update();
+                            this.marker_cluster.addLayer(marker);
+                            // fit bounds
+                            bounds = this.marker_cluster.getBounds();
+                            map.fitBounds(bounds, this.fitBoundsOptions);
+                        }
+                    );
                 }
                 return marker;
             },
@@ -292,18 +305,23 @@ export default Base.extend({
     },
 
     bind_popup(feature, marker) {
-        let popup = feature.properties.popup;
+        const popup = feature.properties.popup || "";
         if (feature.properties.editable && !feature.properties.no_delete) {
             // for editable markers add "delete marker" link to popup
-            popup = popup || "";
-            const $popup = $("<div>" + popup + "</div><br/>");
-            const $link = $("<a href='#' class='deleteMarker'>Delete Marker</a>");
-            $link.on("click", (e) => {
+            const popup_el = document.createElement("div");
+            popup_el.innerHTML = `
+              <div>${popup}</div>
+              <br/>
+              <button type="button" class="delete-marker">Delete marker</button>
+            `;
+
+            // delete marker
+            popup_el.querySelector(".delete-marker").addEventListener("click", (e) => {
                 e.preventDefault();
                 this.map.removeLayer(marker);
                 marker = undefined;
             });
-            marker.bindPopup($("<div/>").append($popup).append($link)[0]);
+            marker.bindPopup(popup_el);
         } else if (popup) {
             marker.bindPopup(popup);
         }
