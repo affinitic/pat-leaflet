@@ -1,28 +1,53 @@
 {
-  "name": "pat-leaflet",
-  "description": "Patternslib Leaflet integration",
-  "version": "1.3.0",
-  "dependencies": {},
-  "devDependencies": {
-    "bower": "latest",
-    "requirejs": "",
-    "http-server": "",
-    "grunt": "",
-    "grunt-contrib-concat": "",
-    "grunt-contrib-uglify": "",
-    "grunt-contrib-copy": "",
-    "grunt-sed": ""
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/collective/plone.formwidget.geolocation"
-  },
-  "keywords": [
-    "patternslib",
-    "pattern",
-    "leaflet",
-    "map",
-    "geo"
-  ],
-  "license": "BSD-3-Clause"
+    "name": "@patternslib/pat-leaflet",
+    "version": "2.0.0",
+    "description": "Patternslib Leaflet integration",
+    "license": "MIT",
+    "main": "./src/leaflet.js",
+    "dependencies": {
+        "@patternslib/patternslib": "*",
+        "fontawesome-free": "^1.0.4",
+        "jquery": "^3.6.1",
+        "leaflet-geosearch": "^3.6.1",
+        "leaflet-minimap": "^3.6.1",
+        "leaflet-providers": "^1.13.0",
+        "leaflet-sleep": "^0.5.2",
+        "leaflet.awesome-markers": "^2.0.5",
+        "leaflet.fullscreen": "^2.4.0",
+        "leaflet.locatecontrol": "^0.76.1",
+        "leaflet.markercluster": "^1.5.3",
+        "leaflet.simplemarkers": "git+https://github.com/jdomingu/Leaflet.SimpleMarkers.git",
+        "leaflet": "^1.9.1"
+    },
+    "devDependencies": {
+        "@patternslib/dev": "^2.7.1"
+    },
+    "scripts": {
+        "start": "NODE_ENV=development webpack serve --config webpack.config.js",
+        "watch": "NODE_ENV=development webpack --config webpack.config.js --watch",
+        "build": "NODE_ENV=production webpack --config webpack.config.js",
+        "build:dev": "NODE_ENV=development webpack --config webpack.config.js",
+        "build:stats": "NODE_ENV=production webpack --config webpack.config.js --json > stats.json",
+        "test": "jest"
+    },
+    "browserslist": [
+        ">0.2%",
+        "ie >= 11",
+        "not dead"
+    ],
+    "homepage": "https://github.com/patternslib/pat-leaflet",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/patternslib/pat-leaflet.git"
+    },
+    "keywords": [
+        "patternslib",
+        "pattern",
+        "leaflet",
+        "map",
+        "geo"
+    ],
+    "publishConfig": {
+        "access": "public"
+    }
 }

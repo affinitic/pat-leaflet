@@ -1,28 +1,36 @@
-# vim: set noexpandtab:
-# Makefile needs to set tabs instead of spaces
-BOWER       ?= node_modules/.bin/bower
-HTTPSERVE   ?= node_modules/.bin/http-server
+ ##############
+## Please note
+##############
 
-all:: install serve
-	printf "\n\n All done!\n\n Go to http://localhost:4001/ to see a demo.\n\n\n\n"
+# First, run ``make install``.
+# After that you have through Makefile extension all the other base targets available.
 
-designerhappy:: all
+# If you want to release on GitHub, make sure to have a .env file with a GITHUB_TOKEN.
+# Also see:
+#	https://github.com/settings/tokens
+#	and https://github.com/release-it/release-it/blob/master/docs/github-releases.md#automated
 
-install:: stamp-npm stamp-bower
 
-serve::
-	$(HTTPSERVE) -p 4001
+# Include base Makefile
+-include node_modules/@patternslib/dev/Makefile
 
-clean::
-	rm -f stamp-npm stamp-bower
-	rm -rf node_modules src/bower_components ~/.cache/bower
+# Define the GITHUB_TOKEN in the .env file for usage with release-it.
+-include .env
+export
 
-stamp-npm: package.json
-	npm install
-	touch stamp-npm
 
-stamp-bower: stamp-npm
-	$(BOWER) install
-	touch stamp-bower
+.PHONY: install
+stamp-yarn install:
+	npx yarn install
+	# Install pre commit hook
+	npx yarn husky install
+	touch stamp-yarn
 
-.PHONY: all clean designerhappy install serve stamp-bower stamp-npm
+
+# Unlink any linked dependencies before building a bundle.
+bundle-pre:
+	-$(YARN) unlink @patternslib/dev
+	-$(YARN) unlink @patternslib/patternslib
+	$(YARN) install --force
+
+#
