@@ -1,4 +1,3 @@
-import $ from "jquery";
 import Base from "@patternslib/patternslib/src/core/base";
 import Parser from "@patternslib/patternslib/src/core/parser";
 import events from "@patternslib/patternslib/src/core/events";
@@ -131,16 +130,17 @@ export default Base.extend({
         map.setView([options.latitude, options.longitude], options.zoom);
 
         // ADD MARKERS
-        const geojson = this.$el.data().geojson;
-
+        const geojson = this.el.dataset.geojson;
         if (typeof geojson === "string" && geojson.indexOf(".json") != -1) {
             // suppose this is a JSON url which ends with ".json" ... try to load it
-            $.ajax({
-                url: geojson,
-                success: function (data) {
-                    this.init_geojson(map, data);
-                },
-            });
+            let response;
+            try {
+                response = await fetch(geojson);
+                const data = await response.json();
+                this.init_geojson(map, data);
+            } catch (e) {
+                return;
+            }
         } else if (geojson) {
             // inject inline geoJSON data object
             this.init_geojson(map, geojson);
