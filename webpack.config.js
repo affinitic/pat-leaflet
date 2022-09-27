@@ -22,7 +22,7 @@ module.exports = () => {
     config.module.rules.push({
         test: /\.svg$/i,
         type: "asset/resource",
-    })
+    });
 
     config.plugins.push(
         mf_config({
@@ -39,7 +39,7 @@ module.exports = () => {
         config.devServer.static.directory = __dirname;
     }
 
-    console.log(config.module.rules);
+    // console.log(config.module.rules);
 
     return config;
 };
