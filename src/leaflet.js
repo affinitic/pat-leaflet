@@ -39,6 +39,9 @@ parser.addArgument("map_layers", [
 
 parser.addArgument("image_path", "node_modules/leaflet.awesome-markers/dist/images");
 
+// fetch geojson data via AJAX url
+parser.addArgument("geojson_ajaxurl", "");
+
 export default Base.extend({
     name: "leaflet",
     trigger: ".pat-leaflet",
@@ -130,20 +133,24 @@ export default Base.extend({
         map.setView([options.latitude, options.longitude], options.zoom);
 
         // ADD MARKERS
-        const geojson = this.el.dataset.geojson;
-        if (typeof geojson === "string" && geojson.indexOf(".json") != -1) {
-            // suppose this is a JSON url which ends with ".json" ... try to load it
+        if (options.geojson_ajaxurl !== "") {
             let response;
             try {
-                response = await fetch(geojson);
+                response = await fetch(options.geojson_ajaxurl);
                 const data = await response.json();
                 this.init_geojson(map, data);
             } catch (e) {
+                log.info(`Could not load geojson data from url ${options.geojson_ajaxurl}`);
                 return;
             }
-        } else if (geojson) {
-            // inject inline geoJSON data object
-            this.init_geojson(map, geojson);
+        } else if (this.el.dataset.geojson) {
+            try {
+                // inject inline geoJSON data object
+                this.init_geojson(map, JSON.parse(this.el.dataset.geojson));
+            } catch(e) {
+                log.info("Could not parse geojson data.");
+                return;
+            }
         }
 
         if (options.geosearch) {
