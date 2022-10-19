@@ -10,9 +10,8 @@
 @import "/node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css";
 @import "/node_modules/leaflet.simplemarkers/lib/Control.SimpleMarkers.css";
 
-
 .pat-leaflet {
-    height: 400px;
+    min-height: 400px;
 }
 
 .leaflet-popup {
