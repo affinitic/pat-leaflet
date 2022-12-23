@@ -35,9 +35,7 @@
         "/src"
     ],
     "browserslist": [
-        ">0.2%",
-        "ie >= 11",
-        "not dead"
+        "defaults"
     ],
     "homepage": "https://github.com/patternslib/pat-leaflet",
     "repository": {
