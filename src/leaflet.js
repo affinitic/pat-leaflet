@@ -140,14 +140,16 @@ export default Base.extend({
                 const data = await response.json();
                 this.init_geojson(map, data);
             } catch (e) {
-                log.info(`Could not load geojson data from url ${options.geojson_ajaxurl}`);
+                log.info(
+                    `Could not load geojson data from url ${options.geojson_ajaxurl}`
+                );
                 return;
             }
         } else if (this.el.dataset.geojson) {
             try {
                 // inject inline geoJSON data object
                 this.init_geojson(map, JSON.parse(this.el.dataset.geojson));
-            } catch(e) {
+            } catch (e) {
                 log.info("Could not parse geojson data.");
                 return;
             }
