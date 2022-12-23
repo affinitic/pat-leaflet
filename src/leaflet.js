@@ -1,13 +1,16 @@
-import Base from "@patternslib/patternslib/src/core/base";
+import $ from "jquery";
+import { BasePattern } from "@patternslib/patternslib/src/core/basepattern";
 import Parser from "@patternslib/patternslib/src/core/parser";
 import events from "@patternslib/patternslib/src/core/events";
 import logging from "@patternslib/patternslib/src/core/logging";
+import registry from "@patternslib/patternslib/src/core/registry";
 
 const log = logging.getLogger("pat-leaflet");
 log.debug("pattern loaded");
 
 export const parser = new Parser("leaflet");
 
+// TODO: Follow Patternslib conventions and rename to NAME-SUBNAME-SUBSUBNAME style names.
 parser.addArgument("latitude", "0.0");
 parser.addArgument("longitude", "0.0");
 parser.addArgument("zoom", "14");
@@ -42,11 +45,11 @@ parser.addArgument("image_path", "node_modules/leaflet.awesome-markers/dist/imag
 // fetch geojson data via AJAX url
 parser.addArgument("geojson_ajaxurl", "");
 
-export default Base.extend({
-    name: "leaflet",
-    trigger: ".pat-leaflet",
-    map: undefined,
-    parser: parser,
+class Pattern extends BasePattern {
+    static name = "leaflet";
+    static trigger = ".pat-leaflet";
+    static parser = parser;
+    map = null;
 
     async init() {
         import("./leaflet.scss");
@@ -85,7 +88,8 @@ export default Base.extend({
 
         // hand over some map events to the element
         map.on("moveend zoomend", (e) => {
-            this.$el.trigger(`leaflet.${e.type}`, { original_event: e });
+            // TODO: Change to native event for next major version.
+            $(this.el).trigger(`leaflet.${e.type}`, { original_event: e });
         });
 
         this.L.Icon.Default.imagePath = options.image_path;
@@ -140,14 +144,16 @@ export default Base.extend({
                 const data = await response.json();
                 this.init_geojson(map, data);
             } catch (e) {
-                log.info(`Could not load geojson data from url ${options.geojson_ajaxurl}`);
+                log.info(
+                    `Could not load geojson data from url ${options.geojson_ajaxurl}`
+                );
                 return;
             }
         } else if (this.el.dataset.geojson) {
             try {
                 // inject inline geoJSON data object
                 this.init_geojson(map, JSON.parse(this.el.dataset.geojson));
-            } catch(e) {
+            } catch (e) {
                 log.info("Could not parse geojson data.");
                 return;
             }
@@ -224,7 +230,7 @@ export default Base.extend({
         }
 
         log.debug("pattern initialized");
-    },
+    }
 
     init_geojson(map, geojson) {
         let bounds;
@@ -309,7 +315,7 @@ export default Base.extend({
         // autozoom
         bounds = this.marker_cluster.getBounds();
         map.fitBounds(bounds, this.fitBoundsOptions);
-    },
+    }
 
     bind_popup(feature, marker) {
         const popup = feature.properties.popup || "";
@@ -332,7 +338,7 @@ export default Base.extend({
         } else if (popup) {
             marker.bindPopup(popup);
         }
-    },
+    }
 
     create_marker(color, extraClasses) {
         color = color || "red";
@@ -343,5 +349,10 @@ export default Base.extend({
             icon: "circle",
             extraClasses: extraClasses,
         });
-    },
-});
+    }
+}
+
+registry.register(Pattern);
+
+export default Pattern;
+export { Pattern };

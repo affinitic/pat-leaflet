@@ -1,8 +1,8 @@
+import events from "@patternslib/patternslib/src/core/events";
 import Pattern from "./leaflet";
-import utils from "@patternslib/patternslib/src/core/utils";
 
 describe("pat-leaflet", () => {
-    beforeEach(() => {
+    afterEach(() => {
         document.body.innerHTML = "";
     });
 
@@ -10,10 +10,8 @@ describe("pat-leaflet", () => {
         document.body.innerHTML = `<div class="pat-leaflet" />`;
         const el = document.querySelector(".pat-leaflet");
 
-        // Just an example!
-        // eslint-disable-next-line no-unused-vars
         const instance = new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        await events.await_pattern_init(instance);
 
         expect(document.querySelector(".pat-leaflet.leaflet-container")).toBeTruthy();
         expect(document.querySelector(".pat-leaflet .leaflet-pane")).toBeTruthy();
@@ -37,9 +35,8 @@ describe("pat-leaflet", () => {
         }' />`;
         const el = document.querySelector(".pat-leaflet");
 
-        // eslint-disable-next-line no-unused-vars
         const instance = new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        await events.await_pattern_init(instance);
 
         expect(document.querySelector(".pat-leaflet.leaflet-container")).toBeTruthy();
         expect(document.querySelector(".pat-leaflet .leaflet-pane")).toBeTruthy();
@@ -59,25 +56,23 @@ describe("pat-leaflet", () => {
         };
         global.fetch = jest.fn(() =>
             Promise.resolve({
-                json: () => Promise.resolve({
-                    "type": "FeatureCollection",
-                    "features": [
-                        {
-                            "type": "Feature",
-                            "properties": {
-                                "popup": "<h6>Location</h6>",
-                                "color": "red"
+                json: () =>
+                    Promise.resolve({
+                        type: "FeatureCollection",
+                        features: [
+                            {
+                                type: "Feature",
+                                properties: {
+                                    popup: "<h6>Location</h6>",
+                                    color: "red",
+                                },
+                                geometry: {
+                                    type: "Point",
+                                    coordinates: [coords.lng, coords.lat],
+                                },
                             },
-                            "geometry": {
-                                "type": "Point",
-                                "coordinates": [
-                                    coords.lng,
-                                    coords.lat
-                                ]
-                            }
-                        }
-                    ]
-                }),
+                        ],
+                    }),
             })
         );
 
@@ -90,9 +85,8 @@ describe("pat-leaflet", () => {
         }' />`;
         const el = document.querySelector(".pat-leaflet");
 
-        // eslint-disable-next-line no-unused-vars
         const instance = new Pattern(el);
-        await utils.timeout(1); // wait a tick for async to settle.
+        await events.await_pattern_init(instance);
 
         expect(document.querySelector(".pat-leaflet.leaflet-container")).toBeTruthy();
         expect(document.querySelector(".pat-leaflet .leaflet-pane")).toBeTruthy();
