@@ -175,18 +175,18 @@ class Pattern extends BasePattern {
 
             // GEOSEARCH
             const geosearch = new GeoSearchControl({
-                showMarker: main_marker === null,
+                showMarker: this.main_marker === null,
                 provider: new SearchProvider(),
             });
             map.addControl(geosearch);
 
             map.on("geosearch/showlocation", (e) => {
                 const latlng = { lat: e.location.y, lng: e.location.x };
-                if (main_marker && main_marker.feature.properties.editable) {
+                if (this.main_marker && this.main_marker.feature.properties.editable) {
                     // update main_marker from geojson object
-                    this.marker_cluster.removeLayer(main_marker);
-                    main_marker.setLatLng(latlng).update();
-                    this.marker_cluster.addLayer(main_marker);
+                    this.marker_cluster.removeLayer(this.main_marker);
+                    this.main_marker.setLatLng(latlng).update();
+                    this.marker_cluster.addLayer(this.main_marker);
                 } else {
                     e.marker.setIcon(this.create_marker("red"));
                     this.bind_popup(
