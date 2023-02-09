@@ -13,7 +13,7 @@ export const parser = new Parser("leaflet");
 // TODO: Follow Patternslib conventions and rename to NAME-SUBNAME-SUBSUBNAME style names.
 parser.addArgument("latitude", "0.0");
 parser.addArgument("longitude", "0.0");
-parser.addArgument("zoom", "14");
+parser.addArgument("zoom", "auto");
 
 parser.addArgument("maxClusterRadius", "80");
 
@@ -133,8 +133,11 @@ class Pattern extends BasePattern {
         this.L.tileLayer
             .provider(options.default_map_layer.id, options.default_map_layer.options)
             .addTo(map);
-
-        map.setView([options.latitude, options.longitude], options.zoom);
+        if (options.zoom === "auto") {
+            map.setView([options.latitude, options.longitude], 14);
+        } else {
+            map.setView([options.latitude, options.longitude], options.zoom);
+        }
 
         // ADD MARKERS
         if (options.geojson_ajaxurl !== "") {
@@ -313,8 +316,11 @@ class Pattern extends BasePattern {
         map.addLayer(this.marker_cluster);
 
         // autozoom
-        bounds = this.marker_cluster.getBounds();
-        map.fitBounds(bounds, this.fitBoundsOptions);
+        if (this.options.zoom === "auto") {
+            bounds = this.marker_cluster.getBounds();
+            map.fitBounds(bounds, this.fitBoundsOptions);
+        }
+        
     }
 
     bind_popup(feature, marker) {
