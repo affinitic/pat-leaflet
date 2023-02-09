@@ -69,7 +69,7 @@ class Pattern extends BasePattern {
             padding: [parseInt(options.boundsPadding), parseInt(options.boundsPadding)],
         });
 
-        const main_marker = (this.main_marker = null);
+        this.main_marker = null;
 
         // MAP INIT
         const map = (this.map = this.L.map(this.el, {
