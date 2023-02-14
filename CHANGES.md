@@ -1,7 +1,6 @@
 # Changelog
 
 
-
 ## [2.1.1](https://github.com/patternslib/pat-leaflet/compare/2.1.0...2.1.1) (2023-02-14)
 
 
@@ -22,25 +21,6 @@
 
 * Upgrade dependencies. ([ddad0ab](https://github.com/patternslib/pat-leaflet/commit/ddad0ab95721d6ecabd8552bc4925e3431895208))
 
-## [2.1.1](https://github.com/patternslib/pat-leaflet/compare/2.1.0...2.1.1) (2023-02-14)
-
-
-### Features
-
-
-* add options references ([6aa12b3](https://github.com/patternslib/pat-leaflet/commit/6aa12b35cb842d7bd72eb900640b94327081bc90))
-
-
-### Bug Fixes
-
-
-* zoom level with markers ([dd58ddc](https://github.com/patternslib/pat-leaflet/commit/dd58ddc7f697bbc5bb116d65276077cac42c3761))
-
-
-### Maintenance
-
-
-* Upgrade dependencies. ([ddad0ab](https://github.com/patternslib/pat-leaflet/commit/ddad0ab95721d6ecabd8552bc4925e3431895208))
 
 ## [2.1.0](https://github.com/patternslib/pat-leaflet/compare/2.0.0...2.1.0) (2022-12-23)
 
@@ -69,32 +49,6 @@ https://unpkg.com/@patternslib/pat-leaflet@2.1.0/dist/bundle.min.js
 
 * Upgrade dependencies. ([ce5b3a3](https://github.com/patternslib/pat-leaflet/commit/ce5b3a376ac7681c96f92467f163da94dd5073b1))
 
-## [2.1.0](https://github.com/patternslib/pat-leaflet/compare/2.0.0...2.1.0) (2022-12-23)
-
-
-### Breaking Changes
-
-
-* parse `data-geojson` attribute always as JSON object and implement new option `geojson_ajaxurl` for remote geojson data ([f0eaf4f](https://github.com/patternslib/pat-leaflet/commit/f0eaf4f320e7c810f2efc9373f47d599449356c5))
-
-
-### Maintenance
-
-
-* Change to class based pattern. ([6a10fb0](https://github.com/patternslib/pat-leaflet/commit/6a10fb0f8ba5b08d75a207e1b8d0ccd3a6f4f8b2))
-
-* Include dist/ and src/ directories in the npm package. ([613fe86](https://github.com/patternslib/pat-leaflet/commit/613fe869f4c12bd96cd6579d5d00bce4b08998b4))This includes the compiled bundle in the npm package and makes it
-available via:
-
-https://cdn.jsdelivr.net/npm/@patternslib/pat-leaflet@2.1.0/dist/bundle.min.js
-and
-https://unpkg.com/@patternslib/pat-leaflet@2.1.0/dist/bundle.min.js
-
-* Refine browserlist with official recommendation. ([9520efe](https://github.com/patternslib/pat-leaflet/commit/9520efeb7f0b350b87c92b0b9545febe1fdf2b5f))
-
-* Set map height to minimum 400 pixel, so that is easier to override. ([442bde5](https://github.com/patternslib/pat-leaflet/commit/442bde54dd8077bf9da0d4db0388b8cd31ec191a))
-
-* Upgrade dependencies. ([ce5b3a3](https://github.com/patternslib/pat-leaflet/commit/ce5b3a376ac7681c96f92467f163da94dd5073b1))
 
 ## [2.0.0](https://github.com/patternslib/pat-leaflet/compare/1.4.0...2.0.0) (2022-09-27)
 
@@ -121,6 +75,7 @@ https://unpkg.com/@patternslib/pat-leaflet@2.1.0/dist/bundle.min.js
 * Modernize - Use dynamic imports and import only what is needed. ([d26ded3](https://github.com/patternslib/pat-leaflet/commit/d26ded3ad8cd84797c93eae55f828c04779a5014))
 
 * Modernize - Use Patternslib code style functions. ([a4fae68](https://github.com/patternslib/pat-leaflet/commit/a4fae68e379b37687293ee59294a1a9c281236f6))
+
 
 ## **1.4.0**
 
