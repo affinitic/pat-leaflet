@@ -22,6 +22,26 @@
 
 * Upgrade dependencies. ([ddad0ab](https://github.com/patternslib/pat-leaflet/commit/ddad0ab95721d6ecabd8552bc4925e3431895208))
 
+## [2.1.1](https://github.com/patternslib/pat-leaflet/compare/2.1.0...2.1.1) (2023-02-14)
+
+
+### Features
+
+
+* add options references ([6aa12b3](https://github.com/patternslib/pat-leaflet/commit/6aa12b35cb842d7bd72eb900640b94327081bc90))
+
+
+### Bug Fixes
+
+
+* zoom level with markers ([dd58ddc](https://github.com/patternslib/pat-leaflet/commit/dd58ddc7f697bbc5bb116d65276077cac42c3761))
+
+
+### Maintenance
+
+
+* Upgrade dependencies. ([ddad0ab](https://github.com/patternslib/pat-leaflet/commit/ddad0ab95721d6ecabd8552bc4925e3431895208))
+
 ## [2.1.0](https://github.com/patternslib/pat-leaflet/compare/2.0.0...2.1.0) (2022-12-23)
 
 
