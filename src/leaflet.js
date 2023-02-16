@@ -16,6 +16,7 @@ parser.addArgument("longitude", "0.0");
 parser.addArgument("zoom", "auto");
 
 parser.addArgument("maxClusterRadius", "80");
+parser.addArgument("useCluster", true);
 
 parser.addArgument("boundsPadding", "20");
 
@@ -82,9 +83,13 @@ class Pattern extends BasePattern {
             sleepOpacity: 1,
         }));
 
-        const marker_cluster = (this.marker_cluster = new LMarkerClusterGroup({
-            maxClusterRadius: this.options.maxClusterRadius,
-        }));
+        if (options.useCluster == true) {
+            this.marker_cluster = new LMarkerClusterGroup({
+                maxClusterRadius: this.options.maxClusterRadius,
+            });
+        } else {
+            this.marker_cluster = new this.L.featureGroup();
+        }
 
         // hand over some map events to the element
         map.on("moveend zoomend", (e) => {
@@ -196,7 +201,7 @@ class Pattern extends BasePattern {
                         { properties: { editable: true, popup: e.location.label } },
                         e.marker
                     );
-                    marker_cluster.addLayer(e.marker);
+                    this.marker_cluster.addLayer(e.marker);
                 }
                 // fit to window
                 map.fitBounds([latlng], fitBoundsOptions);
@@ -320,7 +325,6 @@ class Pattern extends BasePattern {
             bounds = this.marker_cluster.getBounds();
             map.fitBounds(bounds, this.fitBoundsOptions);
         }
-        
     }
 
     bind_popup(feature, marker) {

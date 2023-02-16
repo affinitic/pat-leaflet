@@ -35,6 +35,7 @@ You might also check [their documentation](https://leafletjs.com/reference.html)
 | latitude           | 0.0           |        | Float             | Latitude of the map.                             |
 | longitude          | 0.0           |        | Float             | Longitude of the map.                            |
 | boundsPadding      | 20            |        | Integer           | Padding for map boundaries.                      |
+| useCluster         | true          |        | Boolean           | Enable/Disable the marker cluster feature.       |
 | maxClusterRadius   | 80            |        | Integer           | Set the marker cluster radius.                   |
 | zoom               | auto          | 1 - 19 | Integer           | Zoom level of he map.                            |
 | zoomControl        | true          |        | Boolean           | Show zoom control buttons.                       |
