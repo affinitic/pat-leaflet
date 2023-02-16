@@ -232,6 +232,35 @@ class Pattern extends BasePattern {
             map.addControl(minimap);
         }
 
+        // Trigger the open of a given popup id
+        $(this.el).on("leaflet.openPopup", (e, id) => {
+            var markers = [];
+            if ( typeof this.marker_cluster != "undefined" ) {
+                map.eachLayer(function(l) {
+                    if(l instanceof this.L.Marker) {
+                        markers.push(l);
+                    }
+                });
+                if (id <= markers.length - 1) {
+                    markers[id].openPopup();
+                }
+            }
+        });
+
+        // Trigger the open of a given popup id
+        $(this.el).on("leaflet.closePopup", (e, id) => {
+            var markers = [];
+            if ( typeof this.marker_cluster != "undefined" ) {
+                map.eachLayer(function(l) {
+                    if(l instanceof this.L.Marker) {
+                        markers.push(l);
+                    }
+                });
+                if (id <= markers.length - 1) {
+                    markers[id].closePopup();
+                }
+            }
+        });
         log.debug("pattern initialized");
     }
 
