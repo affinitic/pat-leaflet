@@ -84,11 +84,11 @@ class Pattern extends BasePattern {
         }));
 
         if (options.useCluster == true) {
-            const marker_cluster = (this.marker_cluster = new LMarkerClusterGroup({
+            this.marker_cluster = new LMarkerClusterGroup({
                 maxClusterRadius: this.options.maxClusterRadius,
-            }));
+            });
         } else {
-            const marker_cluster = (this.marker_cluster = new this.L.featureGroup());
+            this.marker_cluster = new this.L.featureGroup();
         }
 
         // hand over some map events to the element
@@ -201,7 +201,7 @@ class Pattern extends BasePattern {
                         { properties: { editable: true, popup: e.location.label } },
                         e.marker
                     );
-                    marker_cluster.addLayer(e.marker);
+                    this.marker_cluster.addLayer(e.marker);
                 }
                 // fit to window
                 map.fitBounds([latlng], fitBoundsOptions);
