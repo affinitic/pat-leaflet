@@ -251,7 +251,7 @@ class Pattern extends BasePattern {
         $(this.el).on("leaflet.openPopup", (e, id) => {
             var markers = [];
             if ( typeof this.marker_cluster != "undefined" ) {
-                map.eachLayer(function(l) {
+                map.eachLayer((l) => {
                     if(l instanceof this.L.Marker) {
                         markers.push(l);
                     }
@@ -266,7 +266,7 @@ class Pattern extends BasePattern {
         $(this.el).on("leaflet.closePopup", (e, id) => {
             var markers = [];
             if ( typeof this.marker_cluster != "undefined" ) {
-                map.eachLayer(function(l) {
+                map.eachLayer((l) => {
                     if(l instanceof this.L.Marker) {
                         markers.push(l);
                     }
